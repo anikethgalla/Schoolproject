@@ -1,6 +1,5 @@
 import streamlit as st
 import pandas as pd
-import streamlit_authenticator as stauth
 from PIL import Image
 
 url_video="https://www.youtube.com/watch?v=BYYwBLJ9q5E"

@@ -23,8 +23,14 @@ title_text = "MUN CONNECT"
 styled_title = f"<h1 style='text-align: center; font-size: 48px; text-decoration: underline; font-family: Arial, sans-serif;'>{title_text}</h1>"
 st.markdown(styled_title, unsafe_allow_html=True)
 
+# Get the directory of the current script
+current_directory = os.path.dirname(__file__)
+
+# Join the directory with the filename to create the full path
+file_path = os.path.join(current_directory, "0_L4Y0o4yoqY5fBpgD.png")
+
 # Image
-img = Image.open('0_L4Y0o4yoqY5fBpgD.png')
+img = Image.open(file_path)
 st.image(
     img,
     width=1200,

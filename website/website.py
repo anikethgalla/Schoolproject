@@ -50,9 +50,15 @@ st.sidebar.link_button("Notes", url_notes)
 # Function to display the DataFrame from the CSV file
 def display_munmaster_list():
     try:
+        # Get the directory of the current script
+        current_directory = os.path.dirname(__file__)
+
+        # Join the directory with the filename to create the full path
+        file_path = os.path.join(current_directory, "munmaster_list.csv")
+
         # Load the CSV file into a DataFrame
-        df = pd.read_csv(r"C:\Users\archa\.vscode\Schoolproject\munmaster_list.csv")
-        st.subheader("MUN Master List")
+        df = pd.read_csv(file_path)
+        st.subheader("MUN Connects")
         st.dataframe(df)  # Display the DataFrame
     except FileNotFoundError:
         st.error("The file 'munmaster_list.csv' was not found.")

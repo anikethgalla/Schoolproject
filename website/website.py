@@ -54,7 +54,7 @@ def display_munmaster_list():
         current_directory = os.path.dirname(__file__)
 
         # Join the directory with the filename to create the full path
-        file_path = os.path.join(current_directory, "munmaster_list.csv")
+        file_path = os.path.join(current_directory, "../munmaster_list.csv")
 
         # Load the CSV file into a DataFrame
         df = pd.read_csv(file_path)

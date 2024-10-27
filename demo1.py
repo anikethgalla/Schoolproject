@@ -1,101 +1,160 @@
 import streamlit as st
 import pandas as pd
 import csv
+import os
 from datetime import datetime
 
 url_video = "https://www.youtube.com/watch?v=BYYwBLJ9q5E"
 url_rop = "https://docs.google.com/document/d/170jzbuCzIFEeF6p1C6MhRfFBfoPt1wQI9srwmH_j2fk/edit"
 url_tips = "https://docs.google.com/document/d/1jNiIhSdG2EZeWg1RU3CeVRL9aNjY-IBC03iwp3SJPgE/edit?usp=sharing "
+url_news = "https://www.reuters.com/"
 url_regs = ""
-url_undocs = " https://digitallibrary.un.org/?_gl=1*1mdo6z5*_ga*ODg0MjE5NTMzLjE3MDI1NzgwNTc.*_ga_TK9BQL5X7Z*MTcwNTA3NjEyNC44LjEuMTcwNTA3NjU4OC4wLjAuMA.."
+url_undocs = "https://digitallibrary.un.org/?_gl=1*1mdo6z5*_ga*ODg0MjE5NTMzLjE3MDI1NzgwNTc.*_ga_TK9BQL5X7Z*MTcwNTA3NjEyNC44LjEuMTcwNTA3NjU4OC4wLjAuMA.."
+
+# Get the directory of the current script
+current_directory = os.path.dirname(__file__)
+
+# Join the directory with the filename to create the full path
+file_path = os.path.join(current_directory, "munmaster_list.csv")
 
 def add_info():
-    st.subheader("ADD INFORMATION")
-    st.write("After adding information refresh your page once")
-    name = st.text_input("Enter Name:")
-    email = st.text_input("Enter Email:")
-    cost = st.number_input("Enter Cost:", min_value=0)
-    hyplink = st.text_input("Enter Website Link:")
-    reglink = st.text_input("Enter Registration Link:")
-    delreq = st.number_input("Enter Min No. of Delegates:", min_value=0, step=1)
-    insta = st.text_input("Enter Socials:")
-    date = st.date_input("Enter date:")
+    #st.subheader("MUN DATABASE")
+    st.subheader("Add MUN Connect details")
+    #st.write("After adding information refresh your page once")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        name = st.text_input("Enter Name:")
+
+    with col2:
+        email = st.text_input("Enter Email:")
+    
+    with col3:
+        cost = st.number_input("Enter Cost:", min_value=0.0)  # Ensure it's float
+
+    with col1:
+        hyplink = st.text_input("Enter Website Link:")
+    
+    with col2:
+        reglink = st.text_input("Enter Registration Link:")
+
+    with col3:
+        delreq = st.number_input("Enter Min No. of Delegates:", min_value=0, step=1)
+
+    with col1:
+        insta = st.text_input("Enter Socials:")
+
+    with col2:
+        date = st.date_input("Enter date:")
 
     if st.button("Add Information"):
-        with open("munmaster_list.csv", "a", newline="") as passage_1:
+        with open(file_path, "a", newline="") as passage_1:
             writer_1 = csv.writer(passage_1)
             if passage_1.tell() == 0:
                 writer_1.writerow(["MUN name", "Email", "Reg_Cost", "Website", "Reg_Link", "Delegation Requirement", "insta", "date"])
             record = [name, email, cost, hyplink, reglink, delreq, insta, date]
             writer_1.writerow(record)
-        st.success("Information added successfully!")
+        st.rerun()
 
 def read_info():
-    st.subheader("MUN DATABASE")
+    st.subheader("Existing MUN Connects")
     try:
-        df = pd.read_csv("munmaster_list.csv")
+        df = pd.read_csv(file_path)
 
-        # Edit button is outside the loop
-        if st.button("Edit"):
-            for index, row in df.iterrows():
-                edit_name = st.text_input(f"Edit Name for {index}", value=row["MUN name"])
-                edit_email = st.text_input(f"Edit Email for {index}", value=row["Email"])
-                edit_cost = st.number_input(f"Edit Cost for {index}", value=row["Reg_Cost"], min_value=0)
-                edit_hyplink = st.text_input(f"Edit Website Link for {index}", value=row["Website"])
-                edit_reglink = st.text_input(f"Edit Registration Link for {index}", value=row["Reg_Link"])
-                edit_delreq = st.number_input(f"Edit Min No. of Delegates for {index}", value=row["Delegation Requirement"], min_value=0, step=1)
-                edit_insta = st.text_input(f"Edit Socials for {index}", value=row["insta"])
+        # Convert columns to numeric types where applicable
+        df['Reg_Cost'] = pd.to_numeric(df['Reg_Cost'], errors='coerce')
+        df['Delegation Requirement'] = pd.to_numeric(df['Delegation Requirement'], errors='coerce')
 
-                # Check if the existing date value is a valid date
-                existing_date = row["date"]
-                if pd.notna(existing_date) and isinstance(existing_date, str):
-                    try:
-                        existing_date = datetime.strptime(existing_date, "%Y-%m-%d").date()
-                    except ValueError:
-                        existing_date = None
+        if df.empty:
+            st.warning("No records found in the MUN database.")
+            return
 
-                # Provide a default date if the existing date is not valid
-                edit_date = st.date_input(f"Edit date for {index}", value=existing_date) if existing_date else st.date_input(f"Edit date for {index}")
-
-                # Update the DataFrame with edited values
-                df.at[index, "MUN name"] = edit_name
-                df.at[index, "Email"] = edit_email
-                df.at[index, "Reg_Cost"] = edit_cost
-                df.at[index, "Website"] = edit_hyplink
-                df.at[index, "Reg_Link"] = edit_reglink
-                df.at[index, "Delegation Requirement"] = edit_delreq
-                df.at[index, "insta"] = edit_insta
-                df.at[index, "date"] = edit_date
-
-                st.success(f"Record for {index} edited successfully!")
-
-        st.dataframe(df)  # Display the updated DataFrame
+        st.dataframe(df.fillna(""))  # Display the updated DataFrame
 
     except pd.errors.EmptyDataError:
         st.warning("The CSV file is empty or does not contain valid data.")
     except FileNotFoundError:
         st.warning("File 'munmaster_list.csv' not found.")
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        st.error("An error occurred: {}".format(e))
 
-# Streamlit app
+def editAndDelete():
+    # Read CSV file into a DataFrame
+    st.subheader("Edit and Delete MUN Connects")
+    try:
+        df = pd.read_csv(file_path)
+
+        # Convert columns to numeric types where applicable
+        df['Reg_Cost'] = pd.to_numeric(df['Reg_Cost'], errors='coerce')
+        df['Delegation Requirement'] = pd.to_numeric(df['Delegation Requirement'], errors='coerce')
+        
+        # Store the DataFrame in session state
+        #if 'df' not in st.session_state:
+        st.session_state.df = df.fillna("")
+
+        # Function to delete a row
+        def delete_row(index):
+            st.session_state.df = st.session_state.df.drop(index).reset_index(drop=True)
+
+        # Function to update a row with new values
+        def update_row(index, updated_values):
+            for col, value in updated_values.items():
+                st.session_state.df.at[index, col] = value
+
+        # Display column headers once
+        col_headers = st.columns(len(df.columns) + 2)
+        for j, col in enumerate(df.columns):
+            col_headers[j].write(f"**{col}**")
+        col_headers[len(df.columns)].write("**Edit**")
+        col_headers[len(df.columns) + 1].write("**Delete**")
+
+        # Display each row with edit and delete options
+        for i, row in st.session_state.df.iterrows():
+            cols = st.columns(len(row) + 2)  # Create columns based on the number of columns in the DataFrame + 2 for edit and delete buttons
+
+            # Editable text inputs for each cell
+            updated_values = {}
+            for j, (col, value) in enumerate(row.items()):
+                updated_values[col] = cols[j].text_input(f"{col}_{i}", value, label_visibility="collapsed")
+
+            # Edit button
+            if cols[len(row)].button("Save", key=f"save_{i}"):
+                update_row(i, updated_values)
+                df = st.session_state.df
+                df.to_csv(file_path, index=False)
+                st.rerun()
+
+            # Delete button
+            if cols[len(row) + 1].button("Delete", key=f"delete_{i}"):
+                delete_row(i)
+                df = st.session_state.df
+                df.to_csv(file_path, index=False)
+                st.rerun()
+    except FileNotFoundError:
+        st.warning("File 'munmaster_list.csv' not found.")
+    except Exception as e:
+        st.error("An error occurred: {}".format(e))
+
+# Streamlit app configuration
 st.set_page_config(
     page_title="MUN CONNECT",
     page_icon=":link:",
     layout="wide"
 )
 
-title_text = "MUN CONNECT "
+title_text = "MUN CONNECT"
 
-styled_title = f"<h1 style='text-align: center; font-size: 48px; text-decoration: underline; font-family: Arial, sans-serif;'>{title_text}</h1>"
+styled_title = "<h1 style='text-align: center; font-size: 48px; text-decoration: underline; font-family: Arial, sans-serif;'>{}</h1>".format(title_text)
 
 st.markdown(styled_title, unsafe_allow_html=True)
+
+# Add information
+add_info()
 
 # Read and display information
 read_info()
 
-# Add information
-add_info()
+# Edit and Delete
+editAndDelete()
 
 # Navigation bar
 video_tutorial = st.sidebar.link_button("Video tutorials", url_video)
@@ -103,3 +162,4 @@ rop = st.sidebar.link_button("Rules of Procedure", url_rop)
 tips = st.sidebar.link_button("Research tips", url_tips)
 df_dates_regs = st.sidebar.link_button("Upload muns", url_regs)
 un_docs = st.sidebar.link_button("UN documents", url_undocs)
+un_news=st.sidebar.link_button("UN News", url_news)

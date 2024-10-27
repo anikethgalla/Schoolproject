@@ -9,7 +9,7 @@ url_tips = "https://docs.google.com/document/d/1jNiIhSdG2EZeWg1RU3CeVRL9aNjY-IBC
 url_undocs = "https://digitallibrary.un.org/?_gl=1*1mdo6z5*_ga*ODg0MjE5NTMzLjE3MDI1NzgwNTc.*_ga_TK9BQL5X7Z*MTcwNTA3NjEyNC44LjEuMTcwNTA3NjU4OC4wLjAuMA.."
 url_regs = "https://munconnectupload.streamlit.app/"
 url_news = "https://www.reuters.com/"
-url_notes = ""
+url_notes = "https://anikethgalla-schoolproject-notes-zdgvq9.streamlit.app/"
 
 # Create the Streamlit web app
 st.set_page_config(

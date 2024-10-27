@@ -18,9 +18,9 @@ current_directory = os.path.dirname(__file__)
 file_path = os.path.join(current_directory, "munmaster_list.csv")
 
 def add_info():
-    #st.subheader("MUN DATABASE")
+    
     st.subheader("Add MUN Connect details")
-    #st.write("After adding information refresh your page once")
+    
     col1, col2, col3 = st.columns(3)
     with col1:
         name = st.text_input("Enter Name:")
@@ -29,7 +29,7 @@ def add_info():
         email = st.text_input("Enter Email:")
     
     with col3:
-        cost = st.number_input("Enter Cost:", min_value=0.0)  # Ensure it's float
+        cost = st.number_input("Enter Cost:", min_value=0.0)  
 
     with col1:
         hyplink = st.text_input("Enter Website Link:")
@@ -60,7 +60,7 @@ def read_info():
     try:
         df = pd.read_csv(file_path)
 
-        # Convert columns to numeric types where applicable
+        
         df['Reg_Cost'] = pd.to_numeric(df['Reg_Cost'], errors='coerce')
         df['Delegation Requirement'] = pd.to_numeric(df['Delegation Requirement'], errors='coerce')
 
@@ -68,7 +68,7 @@ def read_info():
             st.warning("No records found in the MUN database.")
             return
 
-        st.dataframe(df.fillna(""))  # Display the updated DataFrame
+        st.dataframe(df.fillna("")) 
 
     except pd.errors.EmptyDataError:
         st.warning("The CSV file is empty or does not contain valid data.")
@@ -78,40 +78,38 @@ def read_info():
         st.error("An error occurred: {}".format(e))
 
 def editAndDelete():
-    # Read CSV file into a DataFrame
+    
     st.subheader("Edit and Delete MUN Connects")
     try:
         df = pd.read_csv(file_path)
 
-        # Convert columns to numeric types where applicable
+        
         df['Reg_Cost'] = pd.to_numeric(df['Reg_Cost'], errors='coerce')
         df['Delegation Requirement'] = pd.to_numeric(df['Delegation Requirement'], errors='coerce')
         
-        # Store the DataFrame in session state
-        #if 'df' not in st.session_state:
+      
         st.session_state.df = df.fillna("")
 
-        # Function to delete a row
+        # delete a row
         def delete_row(index):
             st.session_state.df = st.session_state.df.drop(index).reset_index(drop=True)
 
-        # Function to update a row with new values
+        #uptdate a row
         def update_row(index, updated_values):
             for col, value in updated_values.items():
                 st.session_state.df.at[index, col] = value
 
-        # Display column headers once
         col_headers = st.columns(len(df.columns) + 2)
         for j, col in enumerate(df.columns):
             col_headers[j].write(f"**{col}**")
         col_headers[len(df.columns)].write("**Edit**")
         col_headers[len(df.columns) + 1].write("**Delete**")
 
-        # Display each row with edit and delete options
-        for i, row in st.session_state.df.iterrows():
-            cols = st.columns(len(row) + 2)  # Create columns based on the number of columns in the DataFrame + 2 for edit and delete buttons
 
-            # Editable text inputs for each cell
+        for i, row in st.session_state.df.iterrows():
+            cols = st.columns(len(row) + 2)  
+
+            # Edit
             updated_values = {}
             for j, (col, value) in enumerate(row.items()):
                 updated_values[col] = cols[j].text_input(f"{col}_{i}", value, label_visibility="collapsed")

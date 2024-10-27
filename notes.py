@@ -12,11 +12,13 @@ def load_notes():
 def save_notes(notes):
     with open("notes.txt", "w") as f:
         f.writelines(notes)
+        st.rerun()
 
 
 def clear_notes():
     with open("notes.txt", "w") as f:
         f.write("") 
+        st.rerun()
 
 
 notes = load_notes()

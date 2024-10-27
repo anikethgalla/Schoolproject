@@ -24,7 +24,7 @@ styled_title = f"<h1 style='text-align: center; font-size: 48px; text-decoration
 st.markdown(styled_title, unsafe_allow_html=True)
 
 # Image
-img = Image.open(r"0_L4Y0o4yoqY5fBpgD.png")
+img = Image.open('0_L4Y0o4yoqY5fBpgD.png')
 st.image(
     img,
     width=1200,

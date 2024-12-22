@@ -4,13 +4,6 @@ import csv
 import os
 from datetime import datetime
 
-url_video = "https://www.youtube.com/watch?v=BYYwBLJ9q5E"
-url_rop = "https://docs.google.com/document/d/170jzbuCzIFEeF6p1C6MhRfFBfoPt1wQI9srwmH_j2fk/edit"
-url_tips = "https://docs.google.com/document/d/1jNiIhSdG2EZeWg1RU3CeVRL9aNjY-IBC03iwp3SJPgE/edit?usp=sharing "
-url_news = "https://www.reuters.com/"
-url_regs = ""
-url_undocs = "https://digitallibrary.un.org/?_gl=1*1mdo6z5*_ga*ODg0MjE5NTMzLjE3MDI1NzgwNTc.*_ga_TK9BQL5X7Z*MTcwNTA3NjEyNC44LjEuMTcwNTA3NjU4OC4wLjAuMA.."
-
 # Get the directory of the current script
 current_directory = os.path.dirname(__file__)
 
@@ -132,32 +125,19 @@ def editAndDelete():
     except Exception as e:
         st.error("An error occurred: {}".format(e))
 
-# Streamlit app configuration
-st.set_page_config(
-    page_title="MUN CONNECT",
-    page_icon=":link:",
-    layout="wide"
-)
+def show_page():
+    title_text = "MUN CONNECT"
 
-title_text = "MUN CONNECT"
+    styled_title = "<h1 style='text-align: center; font-size: 48px; text-decoration: underline; font-family: Arial, sans-serif;'>{}</h1>".format(title_text)
 
-styled_title = "<h1 style='text-align: center; font-size: 48px; text-decoration: underline; font-family: Arial, sans-serif;'>{}</h1>".format(title_text)
+    st.markdown(styled_title, unsafe_allow_html=True)
+    if st.session_state.username == "admin":
+        # Add information
+        add_info()
 
-st.markdown(styled_title, unsafe_allow_html=True)
+    # Read and display information
+    read_info()
 
-# Add information
-add_info()
-
-# Read and display information
-read_info()
-
-# Edit and Delete
-editAndDelete()
-
-# Navigation bar
-video_tutorial = st.sidebar.link_button("Video tutorials", url_video)
-rop = st.sidebar.link_button("Rules of Procedure", url_rop)
-tips = st.sidebar.link_button("Research tips", url_tips)
-df_dates_regs = st.sidebar.link_button("Upload muns", url_regs)
-un_docs = st.sidebar.link_button("UN documents", url_undocs)
-un_news=st.sidebar.link_button("UN News", url_news)
+    if st.session_state.username == "admin":
+        # Edit and Delete
+        editAndDelete()                                     

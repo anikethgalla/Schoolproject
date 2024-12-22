@@ -50,6 +50,11 @@ def custom_sidebar():
                 st.rerun()  # Rerun the app immediately on selection
 
             st.markdown("---")
+            # Logout button
+            if st.button("Logout"):
+                logout()
+
+            st.markdown("---")
             # Static Links (External URLs or Internal Navigation)
             st.markdown("### UN MUN Links")
             st.markdown("[Video tutorials](https://www.youtube.com/watch?v=BYYwBLJ9q5E)")  # External link
@@ -57,11 +62,6 @@ def custom_sidebar():
             st.markdown("[UN documents](https://digitallibrary.un.org/?_gl=1*1mdo6z5*_ga*ODg0MjE5NTMzLjE3MDI1NzgwNTc.*_ga_TK9BQL5X7Z*MTcwNTA3NjEyNC44LjEuMTcwNTA3NjU4OC4wLjAuMA..)")
             st.markdown("[Research tips](https://docs.google.com/document/d/1jNiIhSdG2EZeWg1RU3CeVRL9aNjY-IBC03iwp3SJPgE/edit?usp=sharing)")
             st.markdown("[UN News](https://www.reuters.com/)")
-
-            st.markdown("---")
-            # Logout button
-            if st.button("Logout"):
-                logout()
 
             return menu_options[selected_page]
         else:
